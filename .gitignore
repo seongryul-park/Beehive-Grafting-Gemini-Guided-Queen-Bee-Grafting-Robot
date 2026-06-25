@@ -1,0 +1,46 @@
+# 환경변수 (키 포함) — 절대 커밋 금지
+.env
+.env.*
+!.env.example
+
+# ROS2 빌드 산출물 (repo 내부에서 빌드한 경우)
+ros2_ws/build/
+ros2_ws/install/
+ros2_ws/log/
+**/build/
+**/install/
+**/log/
+.colcon/
+
+# 파이프라인 디버그 출력 (debug/run_<ts>/ : 어노테이션 이미지, crop, CSV 등)
+debug/
+web/debug/
+**/debug/run_*/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+.eggs/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# 로그
+*.log
+
+# 에디터 / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini

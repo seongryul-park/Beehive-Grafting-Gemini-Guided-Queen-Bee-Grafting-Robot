@@ -1,0 +1,32 @@
+# --- secrets: never copy keys into the image (injected at runtime) ---
+.env
+*.env
+!.env.example
+
+# --- python caches / build artifacts ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# --- virtual envs ---
+.venv/
+venv/
+env/
+
+# --- tooling / vcs / editor noise ---
+.git/
+.gitignore
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.DS_Store
+*.log
+
+# --- docs not needed at runtime ---
+README.md
+
+# per-run debug output
+debug/

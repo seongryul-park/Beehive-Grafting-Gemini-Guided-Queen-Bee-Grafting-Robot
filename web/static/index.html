@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Beehive Grafting — Detection & Evaluation</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header>
+    <h1>🐝 Beehive Grafting — Detect · Inspect · Rank · Select</h1>
+    <p class="sub">Toggle between raw OpenCV cell detection (recall check) and the full Gemini analysis.</p>
+  </header>
+
+  <section class="controls">
+    <div class="toggle" role="tablist">
+      <button id="mode-gemini" class="mode-btn active">Gemini Analysis View</button>
+      <button id="mode-opencv" class="mode-btn">OpenCV Detection View</button>
+    </div>
+    <label class="file">
+      <input type="file" id="file-input" accept="image/*" />
+      <span>Choose comb image…</span>
+    </label>
+    <button id="analyze-btn" disabled>Run</button>
+    <span id="status" class="status"></span>
+  </section>
+
+  <main>
+    <!-- Left: image with overlays -->
+    <section class="panel">
+      <h2 id="left-title">Detected cells</h2>
+      <div id="stage">
+        <img id="hive-image" alt="" />
+        <canvas id="overlay"></canvas>
+      </div>
+      <ul class="legend" id="gemini-legend">
+        <li><span class="swatch t-young_larva"></span>young larva (candidate)</li>
+        <li><span class="swatch t-egg"></span>egg</li>
+        <li><span class="swatch t-old_larva"></span>old larva</li>
+        <li><span class="swatch t-empty"></span>empty</li>
+        <li><span class="swatch t-unknown"></span>unknown</li>
+        <li><span class="swatch t-target"></span>selected target</li>
+      </ul>
+      <ul class="legend" id="opencv-legend" hidden>
+        <li><span class="swatch t-detect"></span>detected cell candidate</li>
+        <li class="muted">recall-first: false positives expected, no classification</li>
+      </ul>
+    </section>
+
+    <!-- Right: Gemini panels (ranking + cells) OR OpenCV detection summary -->
+    <section class="panel">
+      <div id="gemini-panels">
+        <h2>Ranked candidates <span id="selected-tag" class="tag"></span></h2>
+        <ol id="candidate-list" class="cell-list">
+          <li class="muted">No analysis yet.</li>
+        </ol>
+        <h2 class="section-h">All detected cells</h2>
+        <ul id="cell-list" class="cell-list"></ul>
+      </div>
+
+      <div id="opencv-panel" hidden>
+        <h2>Detection result</h2>
+        <div id="detect-count" class="big-count">—</div>
+        <h2 class="section-h">Debug</h2>
+        <ul id="debug-list" class="debug-list">
+          <li class="muted">Run detection to see counts.</li>
+        </ul>
+        <h2 class="section-h">Cells (id → bbox)</h2>
+        <ul id="detect-cells" class="cell-list mono"></ul>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/dashboard.js"></script>
+</body>
+</html>

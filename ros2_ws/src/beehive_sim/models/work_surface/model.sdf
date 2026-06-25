@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!--
+  work_surface
+
+  A static box acting as the table. Its TOP face is at world z = 0, so models
+  placed at z >= 0 rest on it. Size 0.60 x 0.60 x 0.04 m; the body center is at
+  z = -0.02 (set by the world's <include><pose>), putting the top at z = 0.
+-->
+<sdf version="1.10">
+  <model name="work_surface">
+    <static>true</static>
+    <link name="link">
+      <collision name="collision">
+        <geometry>
+          <box><size>0.60 0.60 0.04</size></box>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <box><size>0.60 0.60 0.04</size></box>
+        </geometry>
+        <material>
+          <ambient>0.25 0.22 0.20 1</ambient>
+          <diffuse>0.45 0.40 0.35 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>

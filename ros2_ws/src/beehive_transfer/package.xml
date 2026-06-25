@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>beehive_transfer</name>
+  <version>0.2.0</version>
+  <description>
+    벌집 유충 이충 데모(로봇 제어부): /larva_targets 를 받아 Panda(MoveIt)로
+    다중 pick &amp; place 를 수행하고 /robot_status 를 publish 한다.
+    비전/대시보드는 별도 web/ (Flask+Gemini)에서 담당.
+  </description>
+  <maintainer email="you@example.com">you</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>geometry_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>moveit_ros_planning_interface</depend>
+  <depend>moveit_msgs</depend>
+  <depend>shape_msgs</depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

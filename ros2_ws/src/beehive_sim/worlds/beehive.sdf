@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<!--
+  beehive.sdf  —  Gazebo Harmonic world for the grafting demo (Stage 1/2).
+
+  Scene layout (world frame, robot base assumed at origin):
+    - work_surface : table, top face at z = 0, centered in front of the robot.
+    - honeycomb_plane : static textured comb as a VERTICAL WALL (0.60 x 0.40 m)
+      standing at x = 0.5, comb face toward the robot (-X), centered at z = 0.4.
+    - honeycomb_camera : fixed camera at the MIDDLE OF THE PANDA (base center,
+      mid-height: 0,0,0.4) looking straight FORWARD (+X) at the comb wall. LIVE
+      input to the vision pipeline — nothing is pre-recorded. Its FOV (1.0808 rad)
+      is chosen so the 0.60 x 0.40 m wall at x=0.5 EXACTLY fills the 1024 x 683
+      (3:2) image, so every pixel maps to a point on the comb (Stage-4 projection).
+
+  The comb wall sits at x = 0.5 facing a robot based at the origin. These are
+  scene-layout numbers only; the Stage-4 pixel->3D mapping uses the TF tree and
+  the plane geometry (vertical plane x=0.5, normal +X), NOT hardcoded pixels.
+
+  Gazebo Harmonic (pairs with ROS 2 Jazzy). The sensors system + ogre2 render
+  engine are required for the camera to produce images.
+-->
+<sdf version="1.10">
+  <world name="beehive_world">
+
+    <!-- No gravity: this world is CAMERA + VISUALIZATION only. The Panda is
+         spawned from robot_description with no Gazebo controllers (real motion
+         runs in the MoveIt demo via mock_components), so under gravity its
+         unactuated joints collapse the moment it spawns. Zero-g keeps the arm
+         in its spawn pose; the static table/comb/camera are unaffected. -->
+    <gravity>0 0 0</gravity>
+
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <plugin filename="gz-sim-physics-system"
+            name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system"
+            name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system"
+            name="gz::sim::systems::SceneBroadcaster"/>
+    <!-- Required so <sensor type="camera"> actually renders + publishes. -->
+    <plugin filename="gz-sim-sensors-system"
+            name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+
+    <scene>
+      <ambient>0.6 0.6 0.6 1</ambient>
+      <background>0.7 0.7 0.75 1</background>
+      <grid>false</grid>
+    </scene>
+
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 5 0 0 0</pose>
+      <diffuse>1 1 1 1</diffuse>
+      <specular>0.3 0.3 0.3 1</specular>
+      <direction>-0.3 0.2 -0.9</direction>
+    </light>
+
+    <!-- ground -->
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry>
+          <material>
+            <ambient>0.3 0.3 0.3 1</ambient>
+            <diffuse>0.4 0.4 0.4 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- table: top face at z = 0 (body center at z = -0.02) -->
+    <include>
+      <uri>model://work_surface</uri>
+      <pose>0.5 0.0 -0.02 0 0 0</pose>
+    </include>
+
+    <!-- honeycomb comb as a VERTICAL WALL in front of the robot, comb face
+         toward the robot (-X). Center at (0.5, 0, 0.4): 0.5 m ahead, centered,
+         comb centered at z = 0.4 (so it fills the forward camera's view). -->
+    <include>
+      <name>honeycomb_plane</name>
+      <uri>model://honeycomb_plane</uri>
+      <pose>0.5 0.0 0.40 0 0 0</pose>
+    </include>
+
+    <!-- fixed camera at the MIDDLE OF THE PANDA (base center, mid-height),
+         looking straight FORWARD (+X) at the comb wall.
+         pose (0,0,0.4) rpy(0,0,0): camera +X = world +X (forward), +Z = up.
+         hfov 1.0808 rad so the 0.60 x 0.40 wall at x=0.5 exactly fills the
+         1024 x 683 (3:2) frame -> every pixel maps to a point on the comb. -->
+    <model name="honeycomb_camera">
+      <static>true</static>
+      <pose>0.0 0.0 0.40 0 0 0</pose>
+      <link name="link">
+        <sensor name="camera" type="camera">
+          <always_on>1</always_on>
+          <update_rate>15</update_rate>
+          <visualize>true</visualize>
+          <!-- image on this topic; camera_info auto on .../camera_info -->
+          <topic>/honeycomb_camera/image</topic>
+          <camera>
+            <horizontal_fov>1.0808</horizontal_fov>
+            <image>
+              <width>1024</width>
+              <height>683</height>
+              <format>R8G8B8</format>
+            </image>
+            <clip>
+              <near>0.05</near>
+              <far>10.0</far>
+            </clip>
+            <optical_frame_id>honeycomb_camera_optical_frame</optical_frame_id>
+          </camera>
+        </sensor>
+      </link>
+    </model>
+
+  </world>
+</sdf>

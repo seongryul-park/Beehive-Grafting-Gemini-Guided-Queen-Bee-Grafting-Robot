@@ -1,0 +1,6 @@
+flask>=3.0
+google-genai>=0.3        # Gemini Python SDK (google.genai)
+pillow>=10.0             # image loading + cropping
+python-dotenv>=1.0       # .env loading
+numpy>=1.24              # used by the OpenCV detector
+opencv-python-headless>=4.8  # DETECTOR=opencv (offline cell detection)

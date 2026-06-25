@@ -1,0 +1,102 @@
+/* Beehive grafting dashboard — Gemini per-cell overlay. */
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #1a1a1a;
+  color: #eee;
+}
+
+header { padding: 16px 20px; background: #222; border-bottom: 1px solid #333; }
+header h1 { font-size: 20px; margin: 0; }
+header .sub { margin: 4px 0 0; font-size: 13px; color: #9aa; }
+
+.controls {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 20px; background: #1f1f1f; border-bottom: 1px solid #333;
+}
+.file { position: relative; overflow: hidden; cursor: pointer; }
+.file input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.file span,
+#analyze-btn {
+  display: inline-block; padding: 8px 16px; border-radius: 6px;
+  font-weight: 600; font-size: 14px; border: 0; cursor: pointer;
+}
+.file span { background: #2c2c2c; color: #eee; border: 1px solid #444; }
+#analyze-btn { background: #fc3; color: #111; }
+#analyze-btn:disabled { background: #555; color: #999; cursor: not-allowed; }
+
+.status { font-size: 13px; color: #9aa; }
+.status.busy { color: #fc3; }
+.status.ok   { color: #6ee7a8; }
+.status.err  { color: #f87171; }
+
+main {
+  display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; padding: 20px;
+}
+@media (max-width: 820px) { main { grid-template-columns: 1fr; } }
+
+.panel {
+  background: #242424; border: 1px solid #333; border-radius: 10px; padding: 16px;
+}
+.panel h2 { font-size: 15px; margin: 0 0 12px; color: #fc3; }
+
+#stage { position: relative; line-height: 0; }
+#hive-image { width: 100%; border-radius: 6px; display: block; }
+#stage:empty, #hive-image:not([src]) { display: none; }
+#overlay { position: absolute; left: 0; top: 0; pointer-events: none; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 14px; list-style: none; padding: 0; margin: 12px 0 0; font-size: 12px; color: #bbb; }
+.legend li { display: flex; align-items: center; gap: 6px; }
+.swatch { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.swatch.t-young_larva { background: #22c55e; }
+.swatch.t-egg         { background: #38bdf8; }
+.swatch.t-old_larva   { background: #f59e0b; }
+.swatch.t-empty       { background: #64748b; }
+.swatch.t-unknown     { background: #a855f7; }
+.swatch.t-detect      { background: #22d3ee; }
+.swatch.t-target      { background: transparent; border: 2px solid #fff; }
+
+/* mode toggle */
+.toggle { display: inline-flex; border: 1px solid #444; border-radius: 8px; overflow: hidden; }
+.mode-btn { background: #2c2c2c; color: #bbb; border: 0; padding: 8px 14px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.mode-btn.active { background: #fc3; color: #111; }
+
+/* opencv debug panel */
+.big-count { font-size: 26px; font-weight: 800; color: #22d3ee; padding: 4px 0 8px; }
+.debug-list { list-style: none; padding: 0; margin: 0; }
+.debug-list li { display: flex; justify-content: space-between; padding: 6px 10px; background: #2c2c2c; border-radius: 4px; margin-bottom: 5px; font-size: 13px; }
+.debug-list .k { color: #9aa; }
+.debug-list .v { color: #eee; font-variant-numeric: tabular-nums; font-weight: 600; }
+.cell-list.mono li { font-family: ui-monospace, monospace; font-size: 12px; color: #bcd; padding: 3px 0; }
+
+.tag { font-size: 12px; font-weight: 600; color: #6ee7a8; margin-left: 6px; }
+.section-h { margin-top: 20px; }
+
+.cell-list { counter-reset: none; }
+ol.cell-list { padding: 0; list-style: none; }
+.rank {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px; border-radius: 50%; background: #333;
+  color: #ddd; font-size: 11px; font-weight: 700;
+}
+
+.cell-list { list-style: none; padding: 0; margin: 0; }
+.cell-list .muted { color: #888; padding: 8px; }
+.cell-list .err { color: #f87171; padding: 8px; }
+.cell-item {
+  background: #2c2c2c; border-radius: 8px; padding: 10px 12px; margin-bottom: 8px;
+  border-left: 3px solid #444;
+}
+.cell-item.target { border-left-color: #22c55e; background: #243026; }
+.row1 { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.row1 .dot { width: 10px; height: 10px; border-radius: 50%; }
+.row1 .type { color: #bbb; font-size: 13px; }
+.row1 .conf { margin-left: auto; color: #ddd; font-variant-numeric: tabular-nums; }
+.badge {
+  background: #22c55e; color: #06240f; font-size: 10px; font-weight: 800;
+  padding: 1px 6px; border-radius: 4px; letter-spacing: 0.5px;
+}
+.bar { height: 5px; background: #1d1d1d; border-radius: 3px; margin: 7px 0 5px; overflow: hidden; }
+.bar i { display: block; height: 100%; border-radius: 3px; }
+.reason { font-size: 12px; color: #aab; }

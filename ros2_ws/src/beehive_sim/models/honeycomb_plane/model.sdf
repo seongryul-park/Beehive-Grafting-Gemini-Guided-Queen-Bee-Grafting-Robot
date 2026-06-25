@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!--
+  honeycomb_plane
+
+  A STATIC, fixed comb that carries a honeycomb photo as its texture. It is now a
+  VERTICAL WALL standing in front of the robot: a thin slab whose large face
+  (0.60 x 0.40 m, ~3:2 matching comb.jpg 1024x683) lies in the world Y-Z plane.
+  Thickness (0.01 m) is along X; the face toward the robot (-X) shows the comb,
+  so the forward-looking camera at the robot sees it. Swap
+  models/honeycomb_plane/materials/textures/comb.jpg to use a different image.
+
+  Placed by the world <include> pose at (0.5, 0, 0.4): 0.5 m in front of the
+  robot, centered, comb centered at z = 0.4. Expanded 2x from the old tabletop
+  comb but kept at the original 3:2 aspect.
+-->
+<sdf version="1.10">
+  <model name="honeycomb_plane">
+    <static>true</static>
+    <link name="link">
+      <!-- thin slab: X = thickness, Y = width (0.60), Z = height (0.40) -->
+      <collision name="collision">
+        <geometry>
+          <box><size>0.01 0.60 0.40</size></box>
+        </geometry>
+      </collision>
+
+      <visual name="visual">
+        <geometry>
+          <!-- A box (thin slab) gives reliable UV mapping for the texture,
+               unlike the infinite <plane> primitive. -->
+          <box><size>0.01 0.60 0.40</size></box>
+        </geometry>
+        <material>
+          <diffuse>1 1 1 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+          <pbr>
+            <metal>
+              <albedo_map>materials/textures/comb.jpg</albedo_map>
+              <metalness>0.0</metalness>
+              <roughness>0.95</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>
